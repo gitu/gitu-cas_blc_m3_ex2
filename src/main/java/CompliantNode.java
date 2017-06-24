@@ -1,7 +1,7 @@
 /* This malicious node could be thought of as being turned off.
  * It never broadcasts any transactions or responds to any
  * communication with other nodes.
- * 
+ *
  * Note that this is just one example (the simplest one) of a
  * malicious node.
  */
@@ -10,24 +10,31 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-public class MaliciousNode implements Node {
+public class CompliantNode implements Node {
 
-    public MaliciousNode(double p_graph, double p_malicious, double p_txDistribution, int numRounds) {
+    private boolean[] followees;
+    private Set<Transaction> pendingTransactions;
+
+    public CompliantNode(double p_graph, double p_malicious, double p_txDistribution, int numRounds) {
     }
 
     public void receiveCandidates(ArrayList<Integer[]> candidates) {
-        return;
+        for (Integer[] cand : candidates) {
+            if (followees[cand[1]]) {
+                pendingTransactions.add(new Transaction(cand[0]));
+            }
+        }
     }
 
     public Set<Transaction> getProposals() {
-        return new HashSet<Transaction>();
+        return pendingTransactions;
     }
 
     public void setFollowees(boolean[] followees) {
-        return;
+        this.followees = followees;
     }
 
     public void setPendingTransaction(Set<Transaction> pendingTransactions) {
-        return;
+        this.pendingTransactions = pendingTransactions;
     }
 }
